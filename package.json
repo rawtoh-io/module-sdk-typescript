@@ -1,0 +1,56 @@
+{
+  "name": "@rawtoh/module-sdk",
+  "version": "0.2.0",
+  "description": "Client SDK for external Rawtoh modules: hub connection, Ed25519 enrollment, cookie SSO / OIDC login",
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./hono": "./src/hono.ts"
+  },
+  "files": [
+    "src"
+  ],
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "bun test",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "peerDependencies": {
+    "@hono/session": ">=0.2.0",
+    "hono": ">=4.7.0",
+    "json-rpc-2.0": ">=1.7.0",
+    "openid-client": ">=6.0.0",
+    "ws": ">=8.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@hono/session": {
+      "optional": true
+    },
+    "hono": {
+      "optional": true
+    },
+    "openid-client": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@hono/session": "^0.2.0",
+    "@types/bun": "^1.2.0",
+    "@types/ws": "^8.18.1",
+    "hono": "^4.7.0",
+    "json-rpc-2.0": "^1.7.1",
+    "openid-client": "^6.8.2",
+    "prettier": "^3.8.1",
+    "typescript": "^5.9.2",
+    "ws": "^8.19.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rawtoh-io/module-sdk-typescript.git"
+  },
+  "license": "UNLICENSED"
+}
