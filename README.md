@@ -4,7 +4,7 @@ What a TypeScript module needs to talk to a Rawtoh hub. Used by the
 first-party modules (board, twitch, obs); published to npm from this repo.
 
 ```ts
-import { enroll, HubConnection, getRawtohApiUrl } from "@rawtoh/module-sdk"
+import { enroll, installInstance, HubConnection, getRawtohApiUrl } from "@rawtoh/module-sdk"
 import {
   authRoutes,
   createAuthMiddleware,
@@ -14,6 +14,11 @@ import {
 
 - **Identity** — `enroll(apiUrl, token)` redeems an enrollment token into an
   Ed25519 key pair; `signChallenge` answers `session.challenge`.
+- **Self-service install** — `installInstance(apiUrl, authHeaders, orgId,
+  { slug, name })` creates an instance of the module `slug` as the current
+  user (the hub resolves the org's definition first, then the global
+  catalog) and enrolls it. Throws `InstallError` (`session_expired`,
+  `not_found`, `failed`).
 - **Hub connection** — `HubConnection` (register, reconnect with backoff,
   `event.subscribe` table, `emit`) over `WsClient` (JSON-RPC 2.0 + ping).
 - **User login** (`/hono`) — `createAuthMiddleware()` gives `requireAuth` /

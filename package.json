@@ -1,6 +1,6 @@
 {
   "name": "@rawtoh/module-sdk",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Client SDK for external Rawtoh modules: hub connection, Ed25519 enrollment, cookie SSO / OIDC login",
   "type": "module",
   "exports": {

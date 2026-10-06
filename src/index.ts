@@ -1,5 +1,9 @@
-export { enroll, signChallenge } from "./identity"
-export type { EnrollResult, RawtohIdentity } from "./identity"
+export { enroll, InstallError, installInstance, signChallenge } from "./identity"
+export type {
+  EnrollResult,
+  InstallErrorCode,
+  RawtohIdentity,
+} from "./identity"
 export { WsClient } from "./ws"
 export {
   CLOSE_DISCONNECT_REQUESTED,

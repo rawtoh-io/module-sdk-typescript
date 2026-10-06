@@ -72,6 +72,67 @@ export async function enroll(
   }
 }
 
+export type InstallErrorCode = "session_expired" | "not_found" | "failed"
+
+export class InstallError extends Error {
+  constructor(
+    readonly code: InstallErrorCode,
+    message: string
+  ) {
+    super(message)
+    this.name = "InstallError"
+  }
+}
+
+/**
+ * Self-service install: create an instance of the module `slug` in `orgId`
+ * as the current user (`authHeaders` from `hubAuthHeaders`), then enroll it.
+ * The hub resolves the slug against the org's own definitions first, then
+ * the global catalog.
+ */
+export async function installInstance(
+  apiUrl: string,
+  authHeaders: Record<string, string>,
+  orgId: string,
+  { slug, name }: { slug: string; name: string }
+): Promise<EnrollResult> {
+  const res = await fetch(`${apiUrl}/api/o/${orgId}/module-instance`, {
+    method: "POST",
+    headers: { ...authHeaders, "Content-Type": "application/json" },
+    body: JSON.stringify({ slug, name }),
+  })
+
+  if (!res.ok) {
+    // Module tokens carry no offline_access: a 401 means the user's Rawtoh
+    // session aged out, not that Rawtoh is down.
+    if (res.status === 401)
+      throw new InstallError(
+        "session_expired",
+        "Rawtoh session expired — sign out of this module and back in, then retry"
+      )
+    if (res.status === 404)
+      throw new InstallError(
+        "not_found",
+        `Module "${slug}" not found in Rawtoh catalog`
+      )
+    const body = (await res.json().catch(() => ({}))) as { error?: string }
+    throw new InstallError(
+      "failed",
+      body.error || `Install failed (${res.status})`
+    )
+  }
+
+  const instance = (await res.json()) as { enrollmentToken: string }
+  try {
+    return await enroll(apiUrl, instance.enrollmentToken)
+  } catch (err) {
+    throw new InstallError(
+      "failed",
+      err instanceof Error ? err.message : "Enrollment failed"
+    )
+  }
+}
+
 /** Sign a `session.challenge` nonce with the instance's private key. */
 export async function signChallenge(
   identity: RawtohIdentity,
