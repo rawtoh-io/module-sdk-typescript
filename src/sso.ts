@@ -37,6 +37,7 @@ export async function fetchUserByCookie(
 
   const me = (await res.json()) as {
     user: { id: string; name: string; email: string; image: string | null }
+    activeOrganizationId?: string | null
     organizations: Array<{
       id: string
       name: string
@@ -50,6 +51,7 @@ export async function fetchUserByCookie(
     name: me.user.name,
     email: me.user.email,
     picture: me.user.image ?? undefined,
+    activeOrganizationId: me.activeOrganizationId ?? undefined,
     organizations: me.organizations.map(({ logo, ...o }) => ({
       ...o,
       logo: logo ?? undefined,

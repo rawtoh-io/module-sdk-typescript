@@ -11,6 +11,7 @@ export interface UserInfo {
   email?: string
   picture?: string
   email_verified?: boolean
+  activeOrganizationId?: string
   organizations?: Array<{
     id: string
     name: string
